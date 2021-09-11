@@ -8,7 +8,7 @@ const ArtList = ({artworks}) => {
 
     for (let i = 0; i < artworks.length; i++) {
         data.push(
-            <Link to={`/art/${artworks[i].id}`}><Artwork artwork={artworks[i]}/></Link>
+            <Artwork key={artworks[i].name} artwork={artworks[i]}/>
         )
     }
 

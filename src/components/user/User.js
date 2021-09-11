@@ -1,11 +1,22 @@
-import { useEffect } from 'react'
+import Login from './Login'
 
-const User = ({user}) => {
+const User = ({user, toLogout}) => {
+
+    let display;
+
+    if (user) {
+        display = (
+            <div>
+                <h1>Welcome back {user.username}</h1>
+                <button onClick={toLogout}>logout</button>
+            </div>
+        )
+    } else {
+        display = <Login />
+    }
 
     return (
-        <div>
-            <h1>{user ? user.username : "Login"}</h1>
-        </div>
+        display
     )
 }
 

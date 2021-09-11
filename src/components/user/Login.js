@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {Link} from 'react-router-dom'
 
 
 import React from 'react'
@@ -39,6 +40,7 @@ const Login = ({toLogin}) => {
                 />
                 <button type="submit" className="signup-btn">GO</button>
             </form>
+            <Link to="/signup">looking to buy some art? lets be friends, signup here.</Link>
         </div>
     )
 }
