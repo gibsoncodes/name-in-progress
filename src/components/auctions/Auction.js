@@ -1,7 +1,8 @@
 import { useState } from 'react'
 
 const Auction = ({auction, toBid}) => {
-    const [formState, setFormState] = useState({bid: ""})
+    const initState = {bid: "", auctionId: auction.id}
+    const [formState, setFormState] = useState(initState)
     const [timer, setTimer] = useState(initiateTimer)
 
     function initiateTimer() {
@@ -10,8 +11,8 @@ const Auction = ({auction, toBid}) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        
-
+        toBid(formState)
+        setFormState(initState);
     }
 
     const handleChange = (event) => {

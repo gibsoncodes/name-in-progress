@@ -7,6 +7,7 @@ import About from './components/about/About';
 import Entry from './components/about/Entry';
 import Signup from './components/user/Signup';
 import Home from './components/Home';
+import Super from './components/super/Super';
 
 function App() {
 
@@ -77,7 +78,6 @@ function App() {
     }
 
     const toSignup = (data) => {
-        console.log("beepop")
         const payload = data;
         axios({
             method: "POST",
@@ -102,6 +102,19 @@ function App() {
         })
     }
 
+    const toAuction = (data) => {
+        const payload = data;
+        axios({
+            method: "POST",
+            data: payload,
+            withCredentials: true,
+            url: "http://localhost:4000/art/auction"
+        })
+        .then(res => {
+            console.log(res.data)
+        })
+    }
+
     useEffect(() => {
         getUser()
     }, [])
@@ -115,13 +128,16 @@ function App() {
           <nav>
             <Link to="/user">profile</Link>
             <Link to="/about">about</Link>
+            <Link to="/super">riley</Link>
             <Link to="/">home</Link>
           </nav>
           <main>
-            <Route path = "/" render={() => <Home artworks={artworks} />} />
+            <Route exact path="/" render={() => <Home artworks={artworks} />} />
             <Route exact path="/about" component={About} />
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/user" component={User} />
+            <Route exact path="/super" render={() => <Super toAuction={toAuction} artworks={artworks} />} />
+
             {/* <Signup toSignup={toSignup} /> */}
             {/* {!user ? <Login toLogin={toLogin} /> : <User user={user} toLogout={toLogout}/>} */}
           </main>
