@@ -1,7 +1,4 @@
-import { useState } from "react";
-
-
-import React from 'react'
+import { useState } from 'react';
 
 const Signup = ({toSignup}) => {
     const initialState = {

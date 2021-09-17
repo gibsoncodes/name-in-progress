@@ -1,6 +1,6 @@
 import Login from './Login'
 
-const User = ({user, toLogout}) => {
+const User = ({user, toLogout, toLogin, toSignup}) => {
 
     let display;
 
@@ -12,7 +12,7 @@ const User = ({user, toLogout}) => {
             </div>
         )
     } else {
-        display = <Login />
+        display = <Login toLogin={toLogin}/>
     }
 
     return (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 
 
 import React from 'react'
@@ -14,7 +14,7 @@ const Login = ({toLogin}) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        toLogin(formState)
+        toLogin(formState);
     }
     
     const handleChange = (event) => {

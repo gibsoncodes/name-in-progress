@@ -1,29 +1,63 @@
 import './App.css';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { Link, Route } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link, Redirect, Route } from "react-router-dom";
 import User from './components/user/User';
 import About from './components/about/About';
-import Entry from './components/about/Entry';
 import Signup from './components/user/Signup';
 import Home from './components/Home';
 import Super from './components/super/Super';
+import AuctionList from './components/auctions/AuctionList';
+import MyBids from './components/user/bids/MyBids';
 
 function App() {
 
     const [artworks, setArtworks] = useState(null)
+    const [auctions, setAuctions] = useState(null)
+    const [myBids, setMyBids] = useState({active: null, all: null, won: null})
     const [user, setUser] = useState(null)
 
     const getArtworks = () => {
-        console.log("hi")
         axios({
             method: "GET",
             withCredentials: true,
             url: "http://localhost:4000/art"
         })
         .then(res => {
-            console.log(res.data)
             setArtworks(res.data)
+        })
+    }
+
+    const getAllBids = () => {
+        axios({
+            method: "GET",
+            withCredentials: true,
+            url: "http://localhost:4000/bids/all"
+        })
+        .then(res => {
+            setMyBids({...myBids, all: res.data})
+        })
+    }
+
+    const getActiveBids = () => {
+        axios({
+            method: "GET",
+            withCredentials: true,
+            url: "http://localhost:4000/bids/active"
+        })
+        .then(res => {
+            setMyBids({...myBids, active: res.data})
+        })
+    }
+
+    const getWonBids = () => {
+        axios({
+            method: "GET",
+            withCredentials: true,
+            url: "http://localhost:4000/bids/active"
+        })
+        .then(res => {
+            setMyBids({...myBids, won: res.data})
         })
     }
 
@@ -31,10 +65,10 @@ function App() {
         axios({
             method: "GET",
             withCredentials: true,
-            url: "http://localhost:4000/art/auction"
+            url: "http://localhost:4000/auctions/active"
         })
         .then(res => {
-            setArtworks(res.data)
+            setAuctions(res.data)
         })
     }
 
@@ -44,10 +78,16 @@ function App() {
             method: "POST",
             data: payload,
             withCredentials: true,
-            url: "http://localhost:4000/art/auction/bid"
+            url: "http://localhost:4000/bids"
         })
-        .then(() => {
-            getUser()
+        .then((res) => {
+            console.log(res)
+            if (res.status === 200) {
+                getAuctions()
+            } 
+        })
+        .catch((err) => {
+            window.location.replace("/user")
         })
     }
 
@@ -72,7 +112,7 @@ function App() {
             url: "http://localhost:4000/user/logout"
         })
         .then(res => {
-            console.log(res.data)
+            setUser(null)
         })
         
     }
@@ -98,7 +138,9 @@ function App() {
             url: "http://localhost:4000/user/"
         })
         .then(res => {
-            setUser(res.data)
+            console.log(res)
+            setUser(res.data);
+            <Redirect to="/user" />
         })
     }
 
@@ -108,7 +150,7 @@ function App() {
             method: "POST",
             data: payload,
             withCredentials: true,
-            url: "http://localhost:4000/art/auction"
+            url: "http://localhost:4000/auctions"
         })
         .then(res => {
             console.log(res.data)
@@ -117,10 +159,8 @@ function App() {
 
     useEffect(() => {
         getUser()
-    }, [])
-
-    useEffect(() => {
         getArtworks()
+        getAuctions()
     }, [])
 
     return (
@@ -129,17 +169,17 @@ function App() {
             <Link to="/user">profile</Link>
             <Link to="/about">about</Link>
             <Link to="/super">riley</Link>
+            <Link to="/auctions">Auction</Link>
             <Link to="/">home</Link>
           </nav>
           <main>
             <Route exact path="/" render={() => <Home artworks={artworks} />} />
+            <Route exact path="/auctions" render={() => <AuctionList getArtworks={getArtworks} getAuctions={getAuctions} auctions={auctions} artworks={artworks} toBid={toBid}/>} />
             <Route exact path="/about" component={About} />
-            <Route exact path="/signup" component={Signup} />
-            <Route exact path="/user" component={User} />
+            <Route exact path="/signup"  render={() => <Signup toSignup={toSignup}/>}/>
+            <Route exact path="/mybids"  render={() => <MyBids bids={myBids} getActiveBids={getActiveBids} getWonBids={getWonBids} getAllBids={getAllBids} />}/>            
+            <Route exact path="/user" render={() => <User user={user} toLogout={toLogout} toLogin={toLogin} toSignup={toSignup} /> } />
             <Route exact path="/super" render={() => <Super toAuction={toAuction} artworks={artworks} />} />
-
-            {/* <Signup toSignup={toSignup} /> */}
-            {/* {!user ? <Login toLogin={toLogin} /> : <User user={user} toLogout={toLogout}/>} */}
           </main>
       </div>
     );
